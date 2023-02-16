@@ -12,14 +12,16 @@ class MovieRating(models.TextChoices):
 
 class Movie(models.Model):
     title = models.CharField(max_length=127)
-    duration = models.CharField(max_length=10)
+    duration = models.CharField(max_length=10, null=True, blank=True)
     rating = models.CharField(max_length=20, choices=MovieRating.choices, default=MovieRating.DEFAULT)
-    synopsis = models.TextField(null=True)
-    users = models.ManyToManyField("users.User", through="movies.MovieOrder", related_name="movies")
+    synopsis = models.TextField(null=True, blank=True)
+
+    user = models.ForeignKey(User, related_name="movies", on_delete=models.CASCADE)
+    orders = models.ManyToManyField("users.User", related_name="orders", through="movies.MovieOrder")
 
     def __repr__(self):
         id_movie = self.id
-        name_movie = self.name
+        name_movie = self.title
         return f"<{[id_movie]}, movie: {name_movie};>"
 
     def __str__(self):
@@ -28,21 +30,22 @@ class Movie(models.Model):
 
 class MovieOrder(models.Model):
     price = models.IntegerField()
+    buyed_at = models.DateField(auto_now_add=True)
 
-    buyed_at = models.DateField(max_length=20)
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="movie_orders")
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     def __repr__(self):
         id_order = self.id
-        user_buyer = self.user.objects.all()[0].name
-        movie_sold = self.movie.objects.all()[0].name
+        user_buyer = self.user.username
+        movie_sold = self.movie.title
         buyed_at = self.buyed_at
-        return f"<Order{[id_order]}, The user {user_buyer} buys {movie_sold} at {buyed_at}.>"
+
+        return f"<Order{[id_order]}, The user {user_buyer} bought {movie_sold} at {buyed_at}.>"
 
     def __str__(self):
         id_order = self.id
-        user_buyer = self.user.objects.all()[0].name
-        movie_sold = self.movie.objects.all()[0].name
+        user_buyer = self.user.username
+        movie_sold = self.movie.title
+
         return f" MovieOrder[{id_order}] -> {movie_sold}, {user_buyer}"

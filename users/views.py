@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 
 from rest_framework.views import APIView, Response, Request
-from rest_framework.pagination import PageNumberPagination
+
 
 
 from .models import User
@@ -13,12 +13,9 @@ from .exceptions import UserException
 from utils.methods import generate_response, generate_delete_response, generate_error_response
 
 
-class UserView(APIView, PageNumberPagination):
+class UserView(APIView):
     def get(self, request: Request):
-        if request.query_params:
-            users = User.objects.filter().order_by("id")
-        else:
-            users = User.objects.all().order_by("id")
+        users = User.objects.all().order_by("id")
 
         serializer = UserSerializer(users, many=True)
 

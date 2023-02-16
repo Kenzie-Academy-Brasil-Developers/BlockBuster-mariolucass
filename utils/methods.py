@@ -5,6 +5,12 @@ def handle_exception(exception):
     ...
 
 
+class MessageErrors:
+    error_email_and_username = {"email": ["email already registered."], "username": ["username already taken."]}
+    error_email = {"email": ["email already registered."]}
+    error_username = {"username": ["username already taken."]}
+
+
 def generate_response(status_code, variant):
     match status_code:
         case 200:

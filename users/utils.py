@@ -1,13 +1,7 @@
-from rest_framework.views import Response, status
 from .models import User
 from .exceptions import UserException
-from utils.methods import generate_error_response
 
-
-class MessageErrors:
-    error_email_and_username = {"email": ["email already registered."], "username": ["username already taken."]}
-    error_email = {"email": ["email already registered."]}
-    error_username = {"username": ["username already taken."]}
+from utils.methods import MessageErrors
 
 
 def update_keys(keys, user):
