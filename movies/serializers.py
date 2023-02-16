@@ -20,7 +20,7 @@ class MovieSerializer(serializers.Serializer):
 class MovieOrderSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     price = serializers.DecimalField(max_digits=8, decimal_places=2)
-    buyed_at = serializers.DateField(read_only=True)
+    buyed_at = serializers.DateTimeField(read_only=True)
     buyed_by = serializers.SerializerMethodField()
     title = serializers.SerializerMethodField()
 
