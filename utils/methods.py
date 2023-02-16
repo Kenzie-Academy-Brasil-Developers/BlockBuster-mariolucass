@@ -1,10 +1,6 @@
 from rest_framework.views import Response, status
 
 
-def handle_exception(exception):
-    ...
-
-
 class MessageErrors:
     error_email_and_username = {"email": ["email already registered."], "username": ["username already taken."]}
     error_email = {"email": ["email already registered."]}

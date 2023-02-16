@@ -1,6 +1,6 @@
+from .views import UserView, UserDetailView
 from django.urls import path
 from rest_framework_simplejwt import views
-from .views import UserView, UserDetailView
 
 urlpatterns = [
     path("users/login/", views.TokenObtainPairView.as_view()),
