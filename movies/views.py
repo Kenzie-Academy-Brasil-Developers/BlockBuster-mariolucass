@@ -1,16 +1,16 @@
-from django.shortcuts import get_object_or_404
-
 from rest_framework.views import APIView, Request
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from django.shortcuts import get_object_or_404
 
-from .permissions import EmployeeOrReadOnlyPermissions
+
 from .models import Movie
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, MovieOrderSerializer
 from .utils import update_keys
 
 from utils.methods import generate_response, generate_delete_response
+from utils.permissions import EmployeeOrReadOnlyPermissions, AuthenticatedPermissions
 
 
 class MovieView(APIView, PageNumberPagination):
@@ -65,8 +65,17 @@ class MovieDetailView(APIView):
 
 
 class MovieOrderView(APIView):
-    def post(self, request: Request):
-        queryset = Movie.objects.all()
-        serializer = MovieSerializer(queryset, many=True)
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AuthenticatedPermissions]
+
+    def post(self, request: Request, movie_id: int):
+        serializer = MovieOrderSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        movie = get_object_or_404(Movie, id=movie_id)
+        # serializer_movie = MovieSerializer(data=movie)
+        # serializer_movie.is_valid(raise_exception=True)
+
+        serializer.save(user=request.user, movie=movie)
 
         return generate_response(201, serializer.data)

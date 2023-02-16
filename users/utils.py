@@ -4,10 +4,6 @@ from .exceptions import UserException
 from utils.methods import MessageErrors
 
 
-def update_keys(keys, user):
-    for key, value in keys:
-        if key != id:
-            setattr(user, key, value)
 
 
 def find_user(id):

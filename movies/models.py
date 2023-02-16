@@ -25,12 +25,14 @@ class Movie(models.Model):
         return f"<{[id_movie]}, movie: {name_movie};>"
 
     def __str__(self):
-        return f" Movie[{self.id}] -> {self.name}"
+        id_movie = self.id
+        name_movie = self.title
+        return f" Movie[{id_movie}] -> {name_movie}"
 
 
 class MovieOrder(models.Model):
-    price = models.IntegerField()
-    buyed_at = models.DateField(auto_now_add=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    buyed_at = models.DateTimeField(auto_now_add=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
